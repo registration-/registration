@@ -1,6 +1,7 @@
 registration
 ============
-项目目录
+
+> ## guide
 
 ```
 git clone https://github.com/registration-/registration.git
@@ -8,8 +9,17 @@ git clone https://github.com/registration-/registration.git
 cd registration
 
 git checkout dev
+```
 
-// begin to code ~~~
+---
+
+
+// code with pleasure ~~~
+---
+
+```
+// ready to push
+
 git pull
 
 git add .
