@@ -14,10 +14,13 @@ git checkout dev
 ---
 
 
-// code with pleasure ~~~
+### // code with pleasure ~~~
+
 ---
 
-// ready to push
+### // ready to push ~~~
+
+
 ```
 git pull
 
