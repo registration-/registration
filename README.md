@@ -17,9 +17,8 @@ git checkout dev
 // code with pleasure ~~~
 ---
 
-```
 // ready to push
-
+```
 git pull
 
 git add .
