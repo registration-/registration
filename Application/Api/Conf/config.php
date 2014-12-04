@@ -24,9 +24,32 @@ return array(
             /// }
             array('users','User/register',array('method'=> 'POST')),
 
+	 /// 根据phone或email或id或身份证号获取用户信息
+            /// 
+	 /// $_GET:
+            /// [email | id | phone | verified_id]
+            /// return:
+            /// 用户不能存在：{}
+            /// 用户存在：
+            /// {
+            ///    id,
+            ///    name,
+            ///    username,
+            ///    gender,
+            ///    province,
+            ///    city,
+            ///    verified_id,
+            ///    credit,phone,
+            ///    email,
+            ///    insurance_card,
+            ///    registered_at,
+            ///    avatar
+            /// }
+            array('users','User/getUser','status = 1',array('method'=>'GET')),
+
             /// 用户登录
             /// $_POST:
-            /// ['account','password'] 其中，account可能是 phone, email,verified_id
+            /// [account,password] 其中，account可能是 phone, email,verified_id
             /// return:
             /// {
             ///     status: true | false
@@ -36,12 +59,85 @@ return array(
 
             /// 获取医院列表
             /// $_GET:
-            /// ['city_id','skip','limit'] 如果有city_id则是按地区查找医院
+            /// [city_id,skip,limit] 如果有city_id则是按地区查找医院，skip和 limit 是分页用。
+            /// return:
+            /// {
+            ///     total,
+            ///     hospitals: [{
+            ///         id,
+            ///         name,
+            ///         province,
+            ///         city,
+            ///         level,
+            ///         description,
+            ///         phone,
+            ///         website,
+            ///         location,
+            ///         grade,
+            ///         picture,
+            ///         rules,
+            ///         type
+            ///     }]
+            /// }
             array('hospitals','Hospital/getHospitals', array('method'=> 'GET')),
 
             /// 获取某个医院的部门
             /// $_GET:
-            array('hospitals/:hid/departments','Hospital/getDepartments',array('method'=>'GET'))
+            /// return:
+            /// {
+            ///     total,
+            ///     hospital_id,
+            ///     departments:[{
+            ///         id,
+            ///         hospital_id,
+            ///         name,
+            ///         category,
+            ///         description
+            ///     }]
+            /// }
+            array('hospitals/:hid/departments','Hospital/getDepartments',array('method'=>'GET')),
+
+
+            /// 医院发布号源
+            /// $_POST:
+            /// [{
+            ///     doctor_id,
+            ///     date,
+            ///     amount,
+            ///     price
+            /// }]
+            array('hospitals/:hid/sources','Hospital/publishSources',array('method'=>'POST')),
+	
+	 /// 添加预约,各种规则的检查，还别忘了更新预约数量
+            /// $_POST:
+            /// [hospital_id,source_id]
+            /// return :
+            /// {registration表中的不敏感字段，还有其它的跟预约相关的。要求是能完整呈现预约的信息。可以参考挂号网进行一个预约后查看预约信息，它所显示的信息.}
+	 array('users/:uid/registrations','User/addRegistration',array('method'=>'POST')),
+
+            /// 获取用户所有预约
+            /// return:
+            /// [{
+            ///     id,
+            ///     order_at,
+            ///     check_at,
+            ///     hospital_id,
+            ///     user_id,
+            ///     date,
+            ///     doctor_id,
+            ///     status,
+            ///     source_id,
+            ///     code,
+            ///     price
+            /// }]
+            array('users/:uid/registrations','User/getRegistrations',array('method'=>'GET')),
+
+            /// 获取单个预约
+            array('users/:uid/registrations/:rid','User/getRegistrationById',array('method'=>'GET')),
+
+            /// 用户取消预约
+            /// return 所取消的预约.
+            array('users/:uid/registrations/:rid','User/cancelRegistration',array('method'=>'DELETE'))
 
         ),
 
@@ -62,7 +158,7 @@ return array(
             'DB_PWD'        => 'mmkkk',
             'DB_PORT'       => 3306
         ),
-
+	// 远程数据库配置，开发用
         'DB_CONFIG_REMOTE'  => array(
             'DB_TYPE'       => 'mysql',
             'DB_HOST'       => '104.131.165.132',
