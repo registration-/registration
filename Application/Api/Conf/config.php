@@ -14,19 +14,8 @@ return array(
             /// [ {id,pid,city,province} ]
             array('cities','Location/getCities',array('method'=> 'GET')),
 
-
-            /// 注册用户
-            /// $_POST:
-            /// [ phone, verified_id, password ]
-            /// return:
-            /// {
-            ///     status: true | false 
-            /// }
-            array('users','User/register',array('method'=> 'POST')),
-
-	 /// 根据phone或email或id或身份证号获取用户信息
-            /// 
-	 /// $_GET:
+            /// 根据phone或email或id或身份证号获取用户信息
+            /// $_GET:
             /// [email | id | phone | verified_id]
             /// return:
             /// 用户不能存在：{}
@@ -46,6 +35,16 @@ return array(
             ///    avatar
             /// }
             array('users','User/getUser','status = 1',array('method'=>'GET')),
+
+            /// 注册用户
+            /// $_POST:
+            /// [ phone, verified_id, password ]
+            /// return:
+            /// {
+            ///     status: true | false 
+            /// }
+            array('users','User/register',array('method'=> 'POST')),
+
 
             /// 用户登录
             /// $_POST:
@@ -141,7 +140,18 @@ return array(
 
         ),
 
+        /*
         // 默认数据库配置,remote
+        'DB_TYPE'       => 'mysql',
+        'DB_HOST'       => 'localhost',
+        'DB_NAME'       => 'registration',
+        'DB_USER'       => 'root',
+        'DB_PWD'        => 'mmkkk',
+        'DB_PORT'       => '3306',
+        */
+       
+
+        // 默认远程数据库配置
         'DB_TYPE'       => 'mysql',
         'DB_HOST'       => '104.131.165.132',
         'DB_NAME'       => 'registration',
@@ -149,7 +159,10 @@ return array(
         'DB_PWD'        => 'mmkkk',
         'DB_PORT'       => '3306',
 
-        // 本地数据库配置
+
+
+
+        // 默认本地数据库配置
         'DB_CONFIG_LOCAL' => array(
             'DB_TYPE'       => 'mysql',
             'DB_HOST'       => 'localhost',
@@ -158,6 +171,9 @@ return array(
             'DB_PWD'        => 'mmkkk',
             'DB_PORT'       => 3306
         ),
+
+
+
 	// 远程数据库配置，开发用
         'DB_CONFIG_REMOTE'  => array(
             'DB_TYPE'       => 'mysql',
@@ -166,5 +182,10 @@ return array(
             'DB_USER'       => 'jl',
             'DB_PWD'        => 'mmkkk',
             'DB_PORT'       => '3306'
+        ),
+        /// 错误信息提示常量
+        'ERROR' =>array(
+            'PHONE_TAKEN' =>'手机号码已被注册',
+            'VID_TAKEN' => '证件已注册'
         )
 );

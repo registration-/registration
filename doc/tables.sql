@@ -3,7 +3,7 @@
  */
 CREATE TABLE province(
     id int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name nvarchar(10) NOT NULL UNIQUE 
+    name nvarchar(20) NOT NULL UNIQUE 
 );
 
 
@@ -12,7 +12,7 @@ CREATE TABLE province(
  */
 CREATE TABLE city(
     id int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name nvarchar(10) NOT NULL,
+    name nvarchar(20) NOT NULL,
     province_id int(10) NOT NULL
 );
 
@@ -35,12 +35,12 @@ CREATE TABLE user(
     credit int(10) DEFAULT '3',
 
     phone nvarchar(12) NOT NULL UNIQUE,
-    password nvarchar(20) NOT NULL,
+    password nvarchar(160) NOT NULL,
 
     email nvarchar(30),
     insurance_card nvarchar(20),
     registered_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    avatar nvarchar(100)
+    avatar nvarchar(200)
 );
 
 /**
@@ -60,11 +60,11 @@ CREATE TABLE hospital(
     website nvarchar(100),
     location nvarchar(100),
     grade int(10),
-    picture nvarchar(100),
+    picture nvarchar(200),
     rules TEXT,
     type nvarchar(50),
     admin_account nvarchar(30) UNIQUE NOT NULL, 
-    admin_password nvarchar(20) NOT NULL
+    admin_password nvarchar(160) NOT NULL
 );
 
 /**
@@ -90,7 +90,7 @@ CREATE TABLE doctor(
     title nvarchar(45),
     grade int(10),
     good_at nvarchar(255),
-    avatar nvarchar(100),
+    avatar nvarchar(200),
     department_id int(10) NOT NULL
 );
 
