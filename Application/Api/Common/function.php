@@ -13,5 +13,5 @@ function get_user($key,$value){
                 ->limit(1)
                 ->select();
         }
-        return $user;
+        return empty($user) ? $user : $user[0];
 }

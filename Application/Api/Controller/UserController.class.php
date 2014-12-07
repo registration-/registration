@@ -3,6 +3,11 @@ namespace Api\Controller;
 use Think\Controller\RestController;
 class UserController extends RestController {
 
+    protected $userFields = 'name,username,password,gender,province,city,verified_id,vid_type,credit,phone,email,insurance_card,registered_at,avatar'; 
+
+    /**
+     * 注册新用户
+     */
     public function register(){
         $data = array();
         $data['phone'] = I('post.phone');
@@ -17,6 +22,7 @@ class UserController extends RestController {
                 $response['msg'] = C('ERROR.VID_TAKEN');
             }else{
                 $User = D('User');
+                $data['password'] = md5($data['password']);
                 $response['create'] = $User->create($data);
                 $response['status'] = $User->add($data);
                 $response['sql'] = $User->getLastSql();
@@ -52,6 +58,44 @@ class UserController extends RestController {
         if(!empty($value)){
             $user = get_user($key,$value);
         }
+	
+	
         $this->response($user,'json');
+    }
+
+    /**
+     *登录
+     */
+    public function login(){
+
+        $account = I('post.');
+        $result['status'] = false;
+
+        if(!empty($account['account']) && !empty($account['password']) ){
+            $user = get_user('phone',$account['account']);
+            if($user){
+                session('uid',$user['id']);
+                ////
+                $result['status'] = true;
+            }
+        }
+
+        $this->response($result,'json');
+
+    }
+
+    /**
+     *  更新用户信息
+     *  @return  用户信息
+     */
+    public function updateProfile(){
+        $uid = I('get.uid');
+        $user = I('put.');
+        if(!empty($user['password'])){
+            $user['password'] = md5($user['password']);
+        }
+        $User = M('User');
+        $User->where('id=' . $uid)->field($this->userFields)->save($user);
+        $this->response(get_user('id',$uid),'json');
     }
 }

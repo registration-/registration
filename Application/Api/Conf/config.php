@@ -2,7 +2,7 @@
 return array(
 
         // restful router
-        'URL_MODEL'         => 3,
+        'URL_MODEL'         => 2,
         'URL_ROUTER_ON'  => true,
         'URL_ROUTE_RULES' => array(
 
@@ -28,13 +28,14 @@ return array(
             ///    province,
             ///    city,
             ///    verified_id,
-            ///    credit,phone,
+            ///    credit,
+            ///    phone,
             ///    email,
             ///    insurance_card,
             ///    registered_at,
             ///    avatar
             /// }
-            array('users','User/getUser','status = 1',array('method'=>'GET')),
+            array('users$','User/getUser','status = 1',array('method'=>'GET')),
 
             /// 注册用户
             /// $_POST:
@@ -43,7 +44,11 @@ return array(
             /// {
             ///     status: true | false 
             /// }
-            array('users','User/register',array('method'=> 'POST')),
+            array('users$','User/register',array('method'=> 'POST')),
+
+
+            /// 更新用户信息
+            array('users/:uid$','User/updateProfile',array('method'=>'PUT')),
 
 
             /// 用户登录
@@ -54,7 +59,7 @@ return array(
             ///     status: true | false
             /// }
             /// 
-            array('sessions','User/login',array('method'=>'POST')),
+            array('sessions$','User/login',array('method'=>'POST')),
 
             /// 获取医院列表
             /// $_GET:
@@ -139,6 +144,18 @@ return array(
             array('users/:uid/registrations/:rid','User/cancelRegistration',array('method'=>'DELETE'))
 
         ),
+
+
+	/*
+	// openshift 数据库配置
+        'DB_TYPE'       => 'mysql',
+        'DB_HOST'       => '127.3.145.130',
+        'DB_NAME'       => 'registration',
+        'DB_USER'       => 'admin4cpZdEn',
+        'DB_PWD'        => '_Mz3HxyFtsyK',
+        'DB_PORT'       => '3306',
+	*/
+
 
         /*
         // 默认数据库配置,remote
