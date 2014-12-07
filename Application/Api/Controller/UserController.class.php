@@ -23,12 +23,12 @@ class UserController extends RestController {
             }else{
                 $User = D('User');
                 $data['password'] = md5($data['password']);
-                $response['create'] = $User->create($data);
-                $response['status'] = $User->add($data);
-                $response['sql'] = $User->getLastSql();
+		$id = $User->add($data);
+                $response['status'] = !!$id;
                 $response['error'] = $User->getError();
-                $response['msg'] = "OK";
-                $response['user'] = get_user('id',$response['status']);
+		if($response['status']){
+			$response['user'] = get_user('id',$id);
+		}
             }
         }
 

@@ -146,7 +146,6 @@ return array(
         ),
 
 
-	/*
 	// openshift 数据库配置
         'DB_TYPE'       => 'mysql',
         'DB_HOST'       => '127.3.145.130',
@@ -154,7 +153,6 @@ return array(
         'DB_USER'       => 'admin4cpZdEn',
         'DB_PWD'        => '_Mz3HxyFtsyK',
         'DB_PORT'       => '3306',
-	*/
 
 
         /*
@@ -165,7 +163,6 @@ return array(
         'DB_USER'       => 'root',
         'DB_PWD'        => 'mmkkk',
         'DB_PORT'       => '3306',
-        */
        
 
         // 默认远程数据库配置
@@ -175,6 +172,7 @@ return array(
         'DB_USER'       => 'jl',
         'DB_PWD'        => 'mmkkk',
         'DB_PORT'       => '3306',
+        */
 
 
 
