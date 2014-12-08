@@ -5,6 +5,9 @@ return array(
         'URL_MODEL'         => 2,
         'URL_ROUTER_ON'  => true,
         'URL_ROUTE_RULES' => array(
+	    
+            ///七牛uptoken
+	    array('qiniu/uptoken$','Qiniu/generateUptoken',array('method'=>'GET')),
 
             /// 获取省份
             /// [ { id, name } ]
@@ -202,5 +205,9 @@ return array(
         'ERROR' =>array(
             'PHONE_TAKEN' =>'手机号码已被注册',
             'VID_TAKEN' => '证件已注册'
-        )
+        ),
+        /// 七牛云存储的bucket, access_key, secret_token
+        'QINIU_BUCKET' => 'registration',
+        'QINIU_AK' => 'FDsYovhsE3lG_SlZ5JsTIJK88Jc51Q7ggIW1kOZr',
+        'QINIU_SK' => 'P6iaJWQuoV93FJC8UFStH0FdCwjpfK-nNjObgC64'
 );
