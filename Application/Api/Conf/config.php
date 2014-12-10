@@ -95,43 +95,67 @@ return array(
 
             /// 获取医院列表
             /// $_GET:
-            /// [city_id,skip,limit] 如果有city_id则是按地区查找医院，skip和 limit 是分页用。
+            /// [city_id,page,limit] 如果有city_id则是按地区查找医院，skip和 limit 是分页用。
             /// return:
-            /// {
-            ///     total,
-            ///     hospitals: [{
-            ///         id,
-            ///         name,
-            ///         province,
-            ///         city,
-            ///         level,
-            ///         description,
-            ///         phone,
-            ///         website,
-            ///         location,
-            ///         grade,
-            ///         picture,
-            ///         rules,
-            ///         type
-            ///     }]
-            /// }
-            array('hospitals','Hospital/getHospitals', array('method'=> 'GET')),
+            /// 
+            /// [{
+            ///     id,
+            ///     name,
+            ///     province,
+            ///     city,
+            ///     level,
+            ///     description,
+            ///     phone,
+            ///     website,
+            ///     location,
+            ///     grade,
+            ///     picture,
+            ///     rules,
+            ///     type
+            /// }]
+            array('hospitals$','Hospital/getHospitals', array('method'=> 'GET')),
 
             /// 获取某个医院的部门
             /// $_GET:
             /// return:
-            /// {
-            ///     total,
+            /// [{
+            ///     id,
             ///     hospital_id,
-            ///     departments:[{
-            ///         id,
-            ///         hospital_id,
+            ///     name,
+            ///     category,
+            ///     description
+            /// }]
+            array('hospitals/:hid/departments$','Hospital/getDepartments',array('method'=>'GET')),
+
+            ///医院添加部门(科室)
+            /// $_POST:
+            /// {
+            ///  hospital_id,
+            ///  departments: [{
+            ///     name,
+            ///     description,
+            ///     category
+            ///  }]
+            /// }
+            ///
+            array('hospitals/:hid/departments$','Hospital/addDepartments',array('method'=>'POST')),
+
+            /// 医院科室添加医生
+            /// $_POST
+            /// {
+            ///     hospital_id,
+            ///     doctors: [{
+            ///         department_id,
             ///         name,
-            ///         category,
-            ///         description
+            ///         description,
+            ///         title,
+            ///         grade,
+            ///         good_at,
+            ///         avatar
+            ///
             ///     }]
             /// }
-            array('hospitals/:hid/departments','Hospital/getDepartments',array('method'=>'GET')),
+            array('hospitals/:hid/doctors$','Hospital/addDoctors',array('method'=>'POST')),
 
 
             /// 医院发布号源
@@ -142,7 +166,7 @@ return array(
             ///     amount,
             ///     price
             /// }]
-            array('hospitals/:hid/sources','Hospital/publishSources',array('method'=>'POST'))
+            array('hospitals/:hid/sources$','Hospital/publishSources',array('method'=>'POST'))
 	
 
 

@@ -9,6 +9,26 @@
 
 ===
 
+### apis
+- [x] /provinces [GET]获取省份列表
+- [x] /cities [GET]获取城市列表
+- [x] /users [GET]根据phpne,email,id,verified_id获取用户信息
+- [x] /users [POST]注册用户
+- [x] /users/:uid [PUT]更新用户信息
+- [] /sessions [POST]登陆
+- [] /users/:uid/registrations [POST]添加预约
+- [] /users/:uid/registrations [GET]获取用户所有预约
+- [] /users/:uid/registrations/:rid [GET] 获取单个预约
+- [] /users/:uid/registrations/:rid [DELETE] 取消预约
+- [x] /hospitals [GET] 根据city_id获取医院列表
+- [x] /hospitals/:hid/departments [POST] 添加科室
+- [] /hospitals/:hid/departments [GET] 获取医院科室列表
+- [x] /hospitals/:hid/doctors [POST] 添加医生
+- [] /hospitals/:hid/sources [POST] 发布号源
+
+
+===
+
 
 数据库表：
 ```sql
