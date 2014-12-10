@@ -34,7 +34,6 @@
             $departments = $Department->where('hospital_id = %d',array($hid))
                 ->select();
             $this->response($departments,'json');
-
         }
 
         /**
@@ -81,14 +80,65 @@
             $this->response($response,'json');
         }
 
+        /**
+         * 医院发布号源
+         */
         public function  publicSource(){
-                $hid = I('get.hid');
-           $source = I('post.');
-            $Source = M('Source');
-            $Source->create($source)->add();
+            $response['status'] = false;
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            $sources = I('post.sources');
 
-            $this->response($source,'json');
+            if(!empty($hid) && !empty($sources)){
+                $Source = M('Source');
+                $lastId = $Source->addAll($sources);
+                if($lastId){
+                    $response['status'] = true;
+                    $response['last_id'] = $lastId;
+                }
+            }
+            $this->response($response,'json');
 
+        }
+
+        /**
+         * 医院确认就诊或在医院取消就诊
+         */
+        public function checkRegistration(){
+            $response['status'] = false;
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            $rid = I('get.rid');
+            $status = I('put.status');
+            if(!empty($hid) && !empty($rid)){
+                $Registration = M('Registration');
+                if($status == 'F'){
+                    // 确认就诊，将status设置为F
+                    $r['status'] = $status;
+                    $r['check_at'] = time();
+                    $Registration->where('id = %d',array($rid))
+                        ->save($r);
+                    $response['status'] = true;
+                }else if($status == 'C'){
+                    // 取消就诊，先检查能否取消才执行
+                    $registration = $Registration->where('id = %d',array($rid))
+                        ->limit(1)
+                        ->select();
+                    $daysBefore = round((time() - strtotime($registration['date']))/3600/24);
+                    if($daysBefore < 1){
+                        $r['status'] = 'C';
+                        $r['check_at'] = time();
+                        $Registration->where('id = %d',array($rid))
+                            ->save($r);
+
+                        // 取消了预约，把原来号源数量加1
+                        $Source = M('Source');
+                        $Source->where('id = %d',array($registration['source_id']))
+                            ->setInc('amount');
+                    }
+                }
+            }
+            $this->response($response,'json');
         }
 
     }

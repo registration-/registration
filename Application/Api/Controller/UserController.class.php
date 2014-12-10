@@ -98,4 +98,83 @@ class UserController extends RestController {
         $User->where('id=' . $uid)->field($this->userFields)->save($user);
         $this->response(get_user('id',$uid),'json');
     }
+
+
+    /**
+     * 添加预约
+     * @TODO：检查－添加
+     */
+    public function addRegistration(){
+
+    }
+
+    /**
+     * 获取用户所有预约
+     */
+    public function getRegistrations(){
+        $response['status'] = false;
+        $uid = I('get.uid');
+        // $uid = session('user_id');
+        if(!empty($uid)){
+            $Registration = M('Registration');
+            $response['registrations'] = $Registration->where('user_id = %d',array($uid))
+                ->select();
+            $response['status'] = true;
+        }
+        $this->response($response,'json');
+    }
+
+    /**
+     * 根据预约id获取用户预约
+     */
+    public function getRegistrationById(){
+        $response['status'] = false;
+        $uid = I('get.uid');
+        // $uid = session('user_id');
+        $rid = I('get.rid');
+        if(!empty($uid) && !empty($rid)){
+            $Registration = M('Registration');
+            $response['registration'] = $Registration->where('id = %d',array($rid))
+                ->limit(1)
+                ->select();
+            $response['status'] = true;
+        }
+        $this->response($response,'json');
+
+    }
+
+    /**
+     * 用户取消预约，确保在一天前才能取消
+     */
+    public function cancelRegistration(){
+        $response['status'] = false;
+        $uid = I('get.uid');
+        // $uid = session('user_id');
+        $rid = I('get.rid');
+        if(!empty($uid) && !empty($rid)){
+
+            // 取消预约(把status设置为C)
+            $Registration = M('Registration');
+            $registration = $Registration->where('id = %d',array($rid))
+                ->limit(1)
+                ->select();
+            //确保一天前才能取消
+            $daysBefore = round((strtotime($registration['date']) - time())/3600/24);
+            if($daysBefore >= 1){
+                $r['status'] = 'C';
+                $r['check_at'] = time();
+                $Registration->where('id = %d',array($rid))
+                    ->save($r);
+
+                // 取消了预约，把原来号源数量加1
+                $Source = M('Source');
+                $Source->where('id = %d',array($registration['source_id']))
+                    ->setInc('amount');
+
+                $response['status'] = true;
+            }
+        }
+        $this->response($response,'json');
+    }
+
 }

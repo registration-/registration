@@ -7,7 +7,7 @@ return array(
         'URL_ROUTE_RULES' => array(
 	    
             ///七牛uptoken
-	    array('qiniu/uptoken$','Qiniu/generateUptoken',array('method'=>'GET')),
+	        array('qiniu/uptoken$','Qiniu/generateUptoken',array('method'=>'GET')),
 
             /// 获取省份
             /// [ { id, name } ]
@@ -87,11 +87,11 @@ return array(
             array('users/:uid/registrations','User/getRegistrations',array('method'=>'GET')),
 
             /// 获取单个预约
-            array('users/:uid/registrations/:rid','User/getRegistrationById',array('method'=>'GET')),
+            array('users/:uid/registrations/:rid$','User/getRegistrationById',array('method'=>'GET')),
 
-            /// 用户取消预约
-            /// return 所取消的预约.
-            array('users/:uid/registrations/:rid','User/cancelRegistration',array('method'=>'DELETE')),
+            /// 用户取消预约(设置status为C)
+            ///
+            array('users/:uid/registrations/:rid$','User/cancelRegistration',array('method'=>'PUT')),
 
             /// 获取医院列表
             /// $_GET:
@@ -160,14 +160,23 @@ return array(
 
             /// 医院发布号源
             /// $_POST:
-            /// [{
-            ///     doctor_id,
-            ///     date,
-            ///     amount,
-            ///     price
-            /// }]
-            array('hospitals/:hid/sources$','Hospital/publishSources',array('method'=>'POST'))
-	
+            /// {
+            ///     sources:[{
+            ///         doctor_id,
+            ///         date,
+            ///         amount,
+            ///         price
+            ///     }]
+            /// }
+            array('hospitals/:hid/sources$','Hospital/publishSources',array('method'=>'POST')),
+
+            /// 医院确认就诊或在医院取消就诊
+            /// $_PUT:
+            /// {status: 'F'|'C' }
+            /// return:
+            /// {status: true | false}
+            array('hospitals/:hid/registrations/:rid$','Hospital/checkRegistration',array('method'=>'PUT'))
+
 
 
 

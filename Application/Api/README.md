@@ -10,21 +10,23 @@
 ===
 
 ### apis
+- [x] /qiniu/uptoken    _[GET]获取七牛uptoken_
 - [x] /provinces    _[GET]获取省份列表_
 - [x] /cities   _[GET]获取城市列表_
-- [x] /users    _[GET]根据phpne,email,id,verified_id获取用户信息_
+- [x] /users    _[GET]根据phone,email,id,verified_id获取用户信息_
 - [x] /users    _[POST]注册用户_
 - [x] /users/:uid   _[PUT]更新用户信息_
 - [ ] /sessions     _[POST]登陆_
 - [ ] /users/:uid/registrations     _[POST]添加预约_
-- [ ] /users/:uid/registrations     _[GET]获取用户所有预约_
-- [ ] /users/:uid/registrations/:rid    _[GET]获取单个预约_
-- [ ] /users/:uid/registrations/:rid    _[DELETE]取消预约_
+- [x] /users/:uid/registrations     _[GET]获取用户所有预约_
+- [x] /users/:uid/registrations/:rid    _[GET]获取单个预约_
+- [x] /users/:uid/registrations/:rid    _[PUT]取消预约_
 - [x] /hospitals    _[GET] 根据city_id获取医院列表_
 - [x] /hospitals/:hid/departments   _[POST]添加科室_
-- [ ] /hospitals/:hid/departments   _[GET]获取医院科室列表_
+- [x] /hospitals/:hid/departments   _[GET]获取医院科室列表_
 - [x] /hospitals/:hid/doctors   _[POST]添加医生_
-- [ ] /hospitals/:hid/sources   _[POST]发布号源_
+- [x] /hospitals/:hid/sources   _[POST]发布号源_
+- [x] /hospitals/:hid/registrations/:rid    _[PUT]医院确认就诊或在医院取消就诊_
 
 
 ===
@@ -143,7 +145,7 @@ CREATE TABLE registration(
     user_id int(10) NOT NULL,
     date timestamp NOT NULL,
     doctor_id int(10),
-    status enum('P','F','E') DEFAULT 'P',
+    status enum('P','F','E','C') DEFAULT 'P',
     source_id int(10) NOT NULL,
     code nvarchar(20) UNIQUE NOT NULL,
     price float

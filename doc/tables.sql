@@ -109,7 +109,7 @@ CREATE TABLE registration(
     user_id int(10) NOT NULL,
     date timestamp NOT NULL,
     doctor_id int(10),
-    status enum('P','F','E') DEFAULT 'P',
+    status enum('P','F','E','C') DEFAULT 'P',
     source_id int(10) NOT NULL,
     code nvarchar(20) UNIQUE NOT NULL,
     price float
