@@ -113,7 +113,7 @@ return array(
             ///     rules,
             ///     type
             /// }]
-            array('hospitals$','Hospital/getHospitals', array('method'=> 'GET')),
+            array('hospitals$','Hospital/getHospitals', 'status = 1', array('method'=> 'GET')),
 
             /// 医院注册
             /// $_POST:
