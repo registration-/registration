@@ -16,12 +16,15 @@
 - [x] /users    _[GET]根据phone,email,id,verified_id获取用户信息_
 - [x] /users    _[POST]注册用户_
 - [x] /users/:uid   _[PUT]更新用户信息_
-- [ ] /sessions     _[POST]登陆_
+- [x] /users/sessions     _[POST]用户登陆_
 - [ ] /users/:uid/registrations     _[POST]添加预约_
 - [x] /users/:uid/registrations     _[GET]获取用户所有预约_
 - [x] /users/:uid/registrations/:rid    _[GET]获取单个预约_
 - [x] /users/:uid/registrations/:rid    _[PUT]取消预约_
-- [x] /hospitals    _[GET] 根据city_id获取医院列表_
+- [x] /hospitals    _[GET]根据city_id获取医院列表_
+- [x] /hospitals    _[POST]医院注册_
+- [x] /hospitals/session    _[POST]医院管理员登陆_
+- [x] /hospitals/:hid   _[GET]获取某个医院信息_
 - [x] /hospitals/:hid/departments   _[POST]添加科室_
 - [x] /hospitals/:hid/departments   _[GET]获取医院科室列表_
 - [x] /hospitals/:hid/doctors   _[POST]添加医生_

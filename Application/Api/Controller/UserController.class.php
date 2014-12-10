@@ -23,7 +23,7 @@ class UserController extends RestController {
             }else{
                 $User = D('User');
                 $data['password'] = md5($data['password']);
-		$id = $User->add($data);
+		        $id = $User->add($data);
                 $response['status'] = !!$id;
                 $response['error'] = $User->getError();
 		if($response['status']){
@@ -72,14 +72,19 @@ class UserController extends RestController {
         $result['status'] = false;
 
         if(!empty($account['account']) && !empty($account['password']) ){
-            $user = get_user('phone',$account['account']);
+
+            $User = M('User');
+            $user = $User->field($this->userFields)
+                ->where("(phone = '%s' OR email = '%s' OR verified_id = '%s') AND password = '%s'",array($account['account'],$account['account'],$account['account'],md5($account['password'])))
+                ->limit(1)
+                ->select()[0];
             if($user){
-                session('uid',$user['id']);
+                session('user_id',$user['id']);
                 ////
                 $result['status'] = true;
+                $result['user'] = $user;
             }
         }
-
         $this->response($result,'json');
 
     }

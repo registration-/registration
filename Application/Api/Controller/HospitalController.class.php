@@ -5,6 +5,53 @@
 	    protected $publicFields = 'id,name,province,city,city_id,level,description,phone,website,location,grade,picture,rules,type';
 
         /**
+         * 医院注册
+         */
+        public function register(){
+            $response['status'] = false;
+            $hospital = I('post.');
+            if(!empty($hospital['admin_account']) && !empty($hospital['admin_password'])){
+                $Hospital = M('Hospital');
+                $hospital['admin_password'] = md5($hospital['admin_password']);
+
+                $id = $Hospital->add($hospital);
+                $response['status'] = !!$id;
+                if($response['status']){
+                    $response['hospital'] = $hospital;
+                }else{
+                    $response['error'] = $Hospital->getError();
+                }
+            }
+            $this->response($response,'json');
+        }
+
+        /**
+         *登录
+         */
+        public function login(){
+
+            $account = I('post.');
+            $response['status'] = false;
+
+            if(!empty($account['admin_account']) && !empty($account['admin_password']) ){
+
+                $Hospital = M('Hospital');
+                $hospital = $Hospital->field($this->publicFields)
+                    ->where("admin_account = '%s' AND admin_password = '%s'",array($account['admin_account'],md5($account['admin_password'])))
+                    ->limit(1)
+                    ->select()[0];
+                if($hospital){
+                    session('hospital_id',$hospital['id']);
+                    ////
+                    $response['status'] = true;
+                    $response['hospital'] = $hospital;
+                }
+            }
+            $this->response($response,'json');
+        }
+
+
+        /**
          * 根据城市id获取医院列表
          */
 	    public function getHospitals(){
@@ -23,6 +70,27 @@
                 ->select();
 		    $this->response($hospitals,'json');
 	    }
+
+        /**
+         * 根据医院id获取某个医院信息
+         */
+        public function getHospitalById(){
+            $response['status'] = false;
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            if(!empty($hid)){
+                $Hospital = M('Hospital');
+                $response['hospital'] = $Hospital->field($this->publicFields)
+                    ->where('id = %d',array($hid))
+                    ->limit(1)
+                    ->select();
+                if(!empty($response['hospital'])){
+                    $response['hospital'] = $response['hospital'][0];
+                    $response['status'] = true;
+                }
+            }
+            $this->response($response,'json');
+        }
 
 
         /**

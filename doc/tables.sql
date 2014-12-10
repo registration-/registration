@@ -40,7 +40,7 @@ CREATE TABLE user(
     email nvarchar(30),
     insurance_card nvarchar(20),
     registered_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    avatar nvarchar(200)
+    avatar nvarchar(200) DEFAULT 'http://registration.qiniudn.com/assets/images/default_avatar.jpg'
 );
 
 /**
@@ -60,7 +60,7 @@ CREATE TABLE hospital(
     website nvarchar(100),
     location nvarchar(100),
     grade int(10),
-    picture nvarchar(200),
+    picture nvarchar(200) DEFAULT 'http://registration.qiniudn.com/assets/images/default_hospital.jpg',
     rules TEXT,
     type nvarchar(50),
     admin_account nvarchar(30) UNIQUE NOT NULL, 
@@ -90,7 +90,7 @@ CREATE TABLE doctor(
     title nvarchar(45),
     grade int(10),
     good_at nvarchar(255),
-    avatar nvarchar(200),
+    avatar nvarchar(200) DEFAULT 'http://registration.qiniudn.com/assets/images/default_avatar.jpg',
     department_id int(10) NOT NULL
 );
 

@@ -62,7 +62,7 @@ return array(
             ///     status: true | false
             /// }
             /// 
-            array('sessions$','User/login',array('method'=>'POST')),
+            array('users/sessions$','User/login',array('method'=>'POST')),
             /// 添加预约,各种规则的检查，还别忘了更新预约数量
             /// $_POST:
             /// [hospital_id,source_id]
@@ -115,6 +115,18 @@ return array(
             /// }]
             array('hospitals$','Hospital/getHospitals', array('method'=> 'GET')),
 
+            /// 医院注册
+            /// $_POST:
+            /// {name,province,city,city_id,level,description,phone,website,location,type,admin_account,admin_password}
+            array('hospitals$','Hospital/register',array('method'=>'POST')),
+
+            /// 医院管理员登陆
+            /// $_POST
+            /// {admin_account,admin_password}
+            array('hospitals/session$','Hospital/login',array('method'=>'POST')),
+
+            /// 根据id获取某个医院的信息
+            array('hospitals/:hid$','Hospital/getHospitalById',array('method'=>'GET')),
             /// 获取某个医院的部门
             /// $_GET:
             /// return:
