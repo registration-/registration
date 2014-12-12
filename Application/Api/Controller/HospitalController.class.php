@@ -3,7 +3,7 @@
     use \Think\Controller\RestController;
     class HospitalController extends RestController{
 	    protected $publicFields = 'id,name,province,city,city_id,level,description,phone,website,location,grade,picture,rules,type';
-
+        protected $departmentPublicFields = 'id,name,category,description,doctor_amount,hospital_id';
         /**
          * 医院注册
          */
@@ -100,7 +100,7 @@
             $hid = I('get.hid');
             $Department = M('Department');
             $departments = $Department->where('hospital_id = %d',array($hid))
-                ->group('category')
+                //->group('category')
                 ->select();
             foreach($departments as $department){
                 $response[$department['category']][] = $department;
@@ -123,7 +123,7 @@
                 }
                 unset($department);
                 $Department = M('Department');
-                $lastId = $Department->addAll($departments,array(),true); // true:覆盖
+                $lastId = $Department->field($this->departmentPublicFields)->addAll($departments,array(),true); // true:覆盖
                 if($lastId){
                     $response['status'] = true;
                     $response['last_id'] = $lastId;
@@ -142,6 +142,21 @@
             // $hid = session('hospital_id');
             $doctors = I('post.doctors');
             if(!empty($hid) && !empty($doctors)){
+
+                // 更新department表中的doctor_amount字段
+                foreach($doctors as $doctor){
+                    if(empty($count[$doctor['department_id']])){
+                        $count[$doctor['department_id']] = 1;
+                    }else{
+                        $count[$doctor['department_id']] ++;
+                    }
+                }
+                $Department = M('Department');
+                foreach($count as $did => $inc){
+                    $Department->where('id = %d',array($did))->setLazyInc('doctor_amount',$inc,20);
+                }
+
+                // 写入新医生
                 $Doctor = M('Doctor');
                 $lastId = $Doctor->addAll($doctors,array(),true);
                 if($lastId){

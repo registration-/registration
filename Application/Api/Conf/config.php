@@ -63,12 +63,6 @@ return array(
             /// }
             ///
             array('users/session$','User/login',array('method'=>'POST')),
-            /// 添加预约,各种规则的检查，还别忘了更新预约数量
-            /// $_POST:
-            /// [hospital_id,source_id]
-            /// return :
-            /// {registration表中的不敏感字段，还有其它的跟预约相关的。要求是能完整呈现预约的信息。可以参考挂号网进行一个预约后查看预约信息，它所显示的信息.}
-            array('users/:uid/registrations$','User/addRegistration',array('method'=>'POST')),
             /// 获取用户所有预约
             /// return:
             /// [{
@@ -84,10 +78,16 @@ return array(
             ///     code,
             ///     price
             /// }]
-            array('users/:uid/registrations$','User/getRegistrations',array('method'=>'GET')),
+            array('users/:uid/registrations$','status = 1','User/getRegistrations',array('method'=>'GET')),
+            /// 添加预约,各种规则的检查，还别忘了更新预约数量
+            /// $_POST:
+            /// [hospital_id,source_id]
+            /// return :
+            /// {registration表中的不敏感字段，还有其它的跟预约相关的。要求是能完整呈现预约的信息。可以参考挂号网进行一个预约后查看预约信息，它所显示的信息.}
+            array('users/:uid/registrations$','User/addRegistration',array('method'=>'POST')),
 
             /// 获取单个预约
-            array('users/:uid/registrations/:rid$','User/getRegistrationById',array('method'=>'GET')),
+            array('users/:uid/registrations/:rid$','User/getRegistrationById','status = 1',array('method'=>'GET')),
 
             /// 用户取消预约(设置status为C)
             ///
@@ -126,18 +126,27 @@ return array(
             array('hospitals/session$','Hospital/login',array('method'=>'POST')),
 
             /// 根据id获取某个医院的信息
-            array('hospitals/:hid$','Hospital/getHospitalById',array('method'=>'GET')),
-            /// 获取某个医院的部门
-            /// $_GET:
+            array('hospitals/:hid\d$','Hospital/getHospitalById',array('method'=>'GET')),
+            /// 获取某个医院的部门(科室)
             /// return:
-            /// [{
-            ///     id,
-            ///     hospital_id,
-            ///     name,
-            ///     category,
-            ///     description
-            /// }]
-            array('hospitals/:hid/departments$','Hospital/getDepartments',array('method'=>'GET')),
+            /// {
+            ///     category:[{
+            ///         id,
+            ///         hospital_id,
+            ///         name,
+            ///         category,
+            ///         description
+            ///     }],
+            ///     category:[{
+            ///         id,
+            ///         hospital_id,
+            ///         name,
+            ///         category,
+            ///         description
+            ///     }],
+
+            /// }
+            array('hospitals/:hid/departments$','Hospital/getDepartments','status = 1',array('method'=>'GET')),
 
             ///医院添加部门(科室)
             /// $_POST:

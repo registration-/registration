@@ -76,6 +76,7 @@ CREATE TABLE department(
     name nvarchar(20) NOT NULL,
     category nvarchar(20) NOT NULL,
     description TEXT,
+    doctor_amount int(10) DEFAULT '0',
     hospital_id int(10) NOT NULL
 );
 
