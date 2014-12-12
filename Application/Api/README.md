@@ -15,8 +15,8 @@
 - [x] /cities   _[GET]获取城市列表_
 - [x] /users    _[GET]根据phone,email,id,verified_id获取用户信息_
 - [x] /users    _[POST]注册用户_
-- [x] /users/:uid   _[PUT]更新用户信息_
-- [x] /users/sessions     _[POST]用户登陆_
+- [x] /users/:uid\d   _[PUT]更新用户信息_
+- [x] /users/session     _[POST]用户登陆_
 - [ ] /users/:uid/registrations     _[POST]添加预约_
 - [x] /users/:uid/registrations     _[GET]获取用户所有预约_
 - [x] /users/:uid/registrations/:rid    _[GET]获取单个预约_

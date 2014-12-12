@@ -51,7 +51,7 @@ return array(
 
 
             /// 更新用户信息
-            array('users/:uid$','User/updateProfile',array('method'=>'PUT')),
+            array('users/:uid\d$','User/updateProfile',array('method'=>'PUT')),
 
 
             /// 用户登录
@@ -61,14 +61,14 @@ return array(
             /// {
             ///     status: true | false
             /// }
-            /// 
-            array('users/sessions$','User/login',array('method'=>'POST')),
+            ///
+            array('users/session$','User/login',array('method'=>'POST')),
             /// 添加预约,各种规则的检查，还别忘了更新预约数量
             /// $_POST:
             /// [hospital_id,source_id]
             /// return :
             /// {registration表中的不敏感字段，还有其它的跟预约相关的。要求是能完整呈现预约的信息。可以参考挂号网进行一个预约后查看预约信息，它所显示的信息.}
-            array('users/:uid/registrations','User/addRegistration',array('method'=>'POST')),
+            array('users/:uid/registrations$','User/addRegistration',array('method'=>'POST')),
             /// 获取用户所有预约
             /// return:
             /// [{
@@ -84,7 +84,7 @@ return array(
             ///     code,
             ///     price
             /// }]
-            array('users/:uid/registrations','User/getRegistrations',array('method'=>'GET')),
+            array('users/:uid/registrations$','User/getRegistrations',array('method'=>'GET')),
 
             /// 获取单个预约
             array('users/:uid/registrations/:rid$','User/getRegistrationById',array('method'=>'GET')),

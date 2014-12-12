@@ -100,8 +100,12 @@
             $hid = I('get.hid');
             $Department = M('Department');
             $departments = $Department->where('hospital_id = %d',array($hid))
+                ->group('category')
                 ->select();
-            $this->response($departments,'json');
+            foreach($departments as $department){
+                $response[$department['category']][] = $department;
+            }
+            $this->response($response,'json');
         }
 
         /**

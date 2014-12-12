@@ -3,7 +3,7 @@ namespace Api\Controller;
 use Think\Controller\RestController;
 class UserController extends RestController {
 
-    protected $userFields = 'name,username,password,gender,province,city,verified_id,vid_type,credit,phone,email,insurance_card,registered_at,avatar'; 
+    protected $userFields = 'name,username,gender,province,city,verified_id,vid_type,credit,phone,email,insurance_card,registered_at,avatar';
 
     /**
      * 注册新用户
@@ -68,24 +68,24 @@ class UserController extends RestController {
      */
     public function login(){
 
-        $account = I('post.');
-        $result['status'] = false;
-
-        if(!empty($account['account']) && !empty($account['password']) ){
+        $account = I('post.account');
+        $password = I('post.password');
+        $response['status'] = false;
+        if(!empty($account) && !empty($password)){
 
             $User = M('User');
             $user = $User->field($this->userFields)
-                ->where("(phone = '%s' OR email = '%s' OR verified_id = '%s') AND password = '%s'",array($account['account'],$account['account'],$account['account'],md5($account['password'])))
+                ->where("(phone = '%s' OR email = '%s' OR verified_id = '%s') AND password = '%s'",array($account,$account,$account,md5($password)))
                 ->limit(1)
                 ->select()[0];
             if($user){
                 session('user_id',$user['id']);
                 ////
-                $result['status'] = true;
-                $result['user'] = $user;
+                $response['status'] = true;
+                $response['user'] = $user;
             }
         }
-        $this->response($result,'json');
+        $this->response($response,'json');
 
     }
 
@@ -100,7 +100,7 @@ class UserController extends RestController {
             $user['password'] = md5($user['password']);
         }
         $User = M('User');
-        $User->where('id=' . $uid)->field($this->userFields)->save($user);
+        $User->where('id=' . $uid)->field($this->userFields . ',password')->save($user);
         $this->response(get_user('id',$uid),'json');
     }
 
