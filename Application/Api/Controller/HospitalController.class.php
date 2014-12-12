@@ -60,8 +60,8 @@
             $limit = I('get.limit');
 
             $cityId = empty($cityId) ? 1 : $cityId;
-            $page = empty($page) ? 0 : $page;
-            $limit = empty($limit) ? 10 : $limit;
+            $page = empty($page) ? 1 : $page;
+            $limit = empty($limit) ? 20 : $limit;
 
 		    $Hospital = M('Hospital');
 		    $hospitals = $Hospital->field($this->publicFields)
@@ -134,6 +134,38 @@
         }
 
         /**
+         * 根据医院id获取医生，如果传入department_id，则只获取该医院该科室的医生
+         */
+        public function getDoctors(){
+            $response['status'] = false;
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            $did = I('get.department_id');
+            $page = I('get.page');
+            $limit = I('limit');
+            $page = empty($page) ? 1 : $page;
+            $limit = empty($limit) ? 20 : $limit;
+
+
+            if(!empty($hid)){
+                // 构造where语句
+                $sql = 'hospital_id = %d';
+                $params = array($hid);
+                if(!empty($did)){
+                    $sql = $sql . ' AND department_id = %d';
+                    array_push($params,$did);
+                }
+                $Doctor = M('Doctor');
+                $doctors = $Doctor->where($sql,$params)
+                    ->page($page,$limit)
+                    ->select();
+                $response = $doctors;
+            }
+
+            $this->response($response,'json');
+        }
+
+        /**
          * 科室添加医生
          */
         public function addDoctors(){
@@ -153,7 +185,7 @@
                 }
                 $Department = M('Department');
                 foreach($count as $did => $inc){
-                    $Department->where('id = %d',array($did))->setLazyInc('doctor_amount',$inc,20);
+                    $Department->where('id = %d',array($did))->setInc('doctor_amount',$inc);
                 }
 
                 // 写入新医生

@@ -161,6 +161,25 @@ return array(
             ///
             array('hospitals/:hid/departments$','Hospital/addDepartments',array('method'=>'POST')),
 
+            /// 根据医院id获取医生，如果传入department_id，则只获取该医院该科室的医生
+            /// 用法：https://domain.com/api/hospitals/1/doctors?page=1&department_id=2
+            /// https://domain.com/api/hospitals/1/doctors?page=2
+            /// $_GET: [department_id(可选),page(可选，默认位1，即只返回前limit个医生),limit(可选，默认位20)]
+            /// return:
+            /// [{
+            ///     id,
+            ///     name,
+            ///     description,
+            ///     title,
+            ///     grade,
+            ///     good_at,
+            ///     avatar,
+            ///     department,
+            ///     department_id,
+            ///     hospital_id
+            /// }]
+            array('hospitals/:hid/doctors$','Hospital/getDoctors','status = 1', array('method' => 'GET')),
+
             /// 医院科室添加医生
             /// $_POST
             /// {

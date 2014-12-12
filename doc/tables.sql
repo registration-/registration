@@ -92,6 +92,8 @@ CREATE TABLE doctor(
     grade int(10),
     good_at nvarchar(255),
     avatar nvarchar(200) DEFAULT 'http://registration.qiniudn.com/assets/images/default_avatar.jpg',
+    department nvarchar(50),
+    hospital_id int(10),
     department_id int(10) NOT NULL
 );
 

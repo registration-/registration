@@ -27,6 +27,7 @@
 - [x] /hospitals/:hid   _[GET]获取某个医院信息_
 - [x] /hospitals/:hid/departments   _[POST]添加科室_
 - [x] /hospitals/:hid/departments   _[GET]获取医院科室列表_
+- [x] /hospitals/:hid/doctors   _[GET]获取[可选:科室]医生_
 - [x] /hospitals/:hid/doctors   _[POST]添加医生_
 - [x] /hospitals/:hid/sources   _[POST]发布号源_
 - [x] /hospitals/:hid/registrations/:rid    _[PUT]医院确认就诊或在医院取消就诊_
