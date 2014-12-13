@@ -144,7 +144,7 @@
             $page = I('get.page');
             $limit = I('limit');
             $page = empty($page) ? 1 : $page;
-            $limit = empty($limit) ? 20 : $limit;
+            $limit = empty($limit) ? 80 : $limit;
 
 
             if(!empty($hid)){
@@ -157,9 +157,29 @@
                 }
                 $Doctor = M('Doctor');
                 $doctors = $Doctor->where($sql,$params)
+                    ->join('source ON doctor.id = source.doctor_id','LEFT')
+                    ->field('doctor.id,doctor.name,doctor.description,doctor.title,doctor.grade,doctor.good_at,doctor.avatar,doctor.department,doctor.hospital_id,doctor.department_id,source.id as sid,source.date,source.price,source.amount')
                     ->page($page,$limit)
                     ->select();
-                $response = $doctors;
+                $response = array();
+                $marked = array();
+                foreach($doctors as $doctor){
+                    if(empty($marked[$doctor['id']])){
+                        $marked[$doctor['id']] = array_chunk($doctor,10,true)[0];
+                        $marked[$doctor['id']]['sources'] = array();
+                    }
+                    if(!empty($doctor['sid'])){
+                        $marked[$doctor['id']]['sources'][] = array(
+                            'id'    => $doctor['sid'],
+                            'date'  => $doctor['date'],
+                            'amount'=> $doctor['amount'],
+                            'price' => $doctor['price']
+                        );
+                    }
+                }
+                foreach($marked as $doctor){
+                    $response[] = $doctor;
+                }
             }
 
             $this->response($response,'json');
@@ -202,7 +222,7 @@
         /**
          * 医院发布号源
          */
-        public function  publicSource(){
+        public function  publishSources(){
             $response['status'] = false;
             $hid = I('get.hid');
             // $hid = session('hospital_id');

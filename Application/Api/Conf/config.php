@@ -176,7 +176,13 @@ return array(
             ///     avatar,
             ///     department,
             ///     department_id,
-            ///     hospital_id
+            ///     hospital_id,
+            ///     sources: [{
+            ///         id,
+            ///         date,
+            ///         amount,
+            ///         price
+            ///     }]
             /// }]
             array('hospitals/:hid/doctors$','Hospital/getDoctors','status = 1', array('method' => 'GET')),
 
