@@ -2,10 +2,10 @@
 return array(
 
         // restful router
-        'URL_MODEL'         => 2,
+        'URL_MODEL'         => 1,
         'URL_ROUTER_ON'  => true,
         'URL_ROUTE_RULES' => array(
-	    
+
             ///七牛uptoken
 	        array('qiniu/uptoken$','Qiniu/generateUptoken',array('method'=>'GET')),
 
@@ -69,21 +69,28 @@ return array(
             ///     id,
             ///     order_at,
             ///     check_at,
-            ///     hospital_id,
-            ///     user_id,
             ///     date,
-            ///     doctor_id,
             ///     status,
-            ///     source_id,
             ///     code,
-            ///     price
+            ///     price,
+            ///     doctor_name,
+            ///     doctor_title,
+            ///     department,
+            ///     doctor_avatar,
+            ///     hospital_name,
+            ///     source_id,
             /// }]
-            array('users/:uid/registrations$','status = 1','User/getRegistrations',array('method'=>'GET')),
+            array('users/:uid/registrations$','User/getRegistrations','status = 1',array('method'=>'GET')),
             /// 添加预约,各种规则的检查，还别忘了更新预约数量
             /// $_POST:
             /// [hospital_id,source_id]
             /// return :
-            /// {registration表中的不敏感字段，还有其它的跟预约相关的。要求是能完整呈现预约的信息。可以参考挂号网进行一个预约后查看预约信息，它所显示的信息.}
+            /// {
+            ///     status,
+            ///     registrations: [{
+            ///
+            ///     }]
+            /// }
             array('users/:uid/registrations$','User/addRegistration',array('method'=>'POST')),
 
             /// 获取单个预约

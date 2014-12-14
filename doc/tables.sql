@@ -114,7 +114,7 @@ CREATE TABLE registration(
     doctor_id int(10),
     status enum('P','F','E','C') DEFAULT 'P',
     source_id int(10) NOT NULL,
-    code nvarchar(20) UNIQUE NOT NULL,
+    code nvarchar(40) UNIQUE NOT NULL,
     price float
 );
 

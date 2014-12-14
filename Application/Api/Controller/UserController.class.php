@@ -110,9 +110,73 @@ class UserController extends RestController {
      * @TODO：检查－添加
      */
     public function addRegistration(){
+        $response['status'] = false;
+        $uid = I('get.uid');
+        $sid = I('post.source_id');
+        if(!empty($uid) && !empty($sid)){
+            // 获取source
+            $Source = M('Source');
+            $sql = sprintf("SELECT source.id,source.date,source.amount,source.price,source.doctor_id,doctor.name as doctor_name,doctor.title as doctor_title,doctor.grade as doctor_grade,doctor.avatar as doctor_avatar,doctor.department_id,doctor.department,doctor.hospital_id FROM `source` INNER JOIN doctor ON doctor.id = source.doctor_id  WHERE ( source.id = %d ) LIMIT 1",$sid);
+            $source = $Source->query($sql);
+            if($source){
+                $source = $source[0];
+            }
 
+            //$response['error'] = $Source->getError();
+            //$response['sql'] = $Source->getLastSql();
+            //$response['source'] = $source;
+            //$response['sid'] = $sid;
+
+            if(!empty($source) && $source['amount'] > 0){
+                $registrations = $this->_getRegistrationsByUserId($uid);
+                $isOk = true;
+                foreach($registrations as $registration){
+                    // TODO:完善验证规则，这里仅仅应用“一个用户不可同时预约同一个科室的多个医生”
+                    if($registration['department_id'] == $source['department_id']){
+                        $isOk = false;
+                        break;
+                    }
+                }
+                //$response['isOk'] = $isOk;
+                if($isOk){
+                    $Registration = M('Registration');
+
+                    $data['hospital_id'] = $source['hospital_id'];
+                    $data['user_id'] = $uid;
+                    $data['date'] = $source['date'];
+                    $data['doctor_id'] = $source['doctor_id'];
+                    $data['source_id'] = $source['id'];
+                    $data['price'] = $source['price'];
+                    $data['code'] = md5(time() . $uid . $source['doctor_id'] . $sid);
+
+                    $rid = $Registration->add($data);
+
+                    if(!!$rid){
+                        $Source->where('id = %d',array($sid))->setDec('amount');
+                        $response['registrations'] = $this->_getRegistrationsByUserId($uid);
+                        $response['status'] = true;
+                    }
+                }
+            }
+        }
+        $this->response($response,'json');
     }
 
+    /**
+     * 内部函数，获取用户所有预约
+     */
+    protected function _getRegistrationsByUserId($uid){
+        $registrations = array();
+        if(!empty($uid)){
+            $Registration = M('Registration');
+            $registrations = $Registration->where('user_id = %d',array($uid))
+                ->join('doctor ON doctor.id = registration.doctor_id')
+                ->join('hospital ON hospital.id = registration.hospital_id')
+                ->field('registration.id,registration.order_at,registration.source_id,registration.check_at,registration.date,registration.status,registration.code,registration.price,doctor.name as doctor_name,doctor.title as doctor_title,doctor.department,doctor.department_id,doctor.avatar as doctor_avatar,hospital.name as hospital_name')
+                ->select();
+        }
+        return $registrations;
+    }
     /**
      * 获取用户所有预约
      */
@@ -121,9 +185,7 @@ class UserController extends RestController {
         $uid = I('get.uid');
         // $uid = session('user_id');
         if(!empty($uid)){
-            $Registration = M('Registration');
-            $response['registrations'] = $Registration->where('user_id = %d',array($uid))
-                ->select();
+            $response['registrations'] = $this->_getRegistrationsByUserId($uid);
             $response['status'] = true;
         }
         $this->response($response,'json');
