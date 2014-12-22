@@ -55,20 +55,36 @@
          * 根据城市id获取医院列表
          */
 	    public function getHospitals(){
+            $response = [];
             $cityId = I('get.city_id');
+            $department = I('get.department');
             $page = I('get.page');
             $limit = I('get.limit');
 
-            $cityId = empty($cityId) ? 1 : $cityId;
             $page = empty($page) ? 1 : $page;
             $limit = empty($limit) ? 20 : $limit;
 
 		    $Hospital = M('Hospital');
-		    $hospitals = $Hospital->field($this->publicFields)
-                ->where('city_id = %d',array($cityId))
-                ->page($page,$limit)
-                ->select();
-		    $this->response($hospitals,'json');
+            if(!empty($cityId)) {
+                $hospitals = $Hospital->field($this->publicFields)
+                    ->where('city_id = %d', array($cityId))
+                    ->page($page, $limit)
+                    ->select();
+                $response = $hospitals;
+            }else if(!empty($department)){
+                $fields = 'hospital.id,hospital.name,hospital.province,hospital.city,hospital.level,hospital.description,hospital.phone,hospital.website,hospital.location,hospital.grade,hospital.picture,hospital.rules,hospital.type';
+                $sql = sprintf("SELECT " . $fields . " FROM `hospital` INNER JOIN department ON hospital.id = department.hospital_id  WHERE ( department.name = '%s' )",$department);
+                $hospitals = $Hospital->query($sql);
+                $response = $hospitals;
+            }else{
+                $hospitals = $Hospital->field($this->publicFields)
+                    ->select();
+
+                foreach($hospitals as $hospital){
+                    $response[$hospital['province']][] = $hospital;
+                }
+            }
+		    $this->response($response,'json');
 	    }
 
         /**
@@ -241,6 +257,29 @@
         }
 
         /**
+         * 根据code获取预约信息
+         */
+        public function getRegistration(){
+            $response = array();
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            $code = I('get.code');
+            if(!empty($hid) && !empty($code)){
+                $Registration = M('Registration');
+                $registration = $Registration->where("code = '%s'",array($code))
+                    ->join('user ON user.id = registration.user_id')
+                    ->join('doctor ON doctor.id = registration.doctor_id')
+                    ->field('registration.id,registration.order_at,registration.source_id,registration.check_at,registration.date,registration.status,registration.code,registration.price,doctor.name as doctor_name,doctor.title as doctor_title,doctor.department,doctor.department_id,doctor.avatar as doctor_avatar,user.name as user_name,user.avatar as user_avatar')
+                    ->select();
+                if(!empty($registration)){
+                    $response = $registration[0];
+                }
+            }
+            $this->response($response,'json');
+        }
+
+
+        /**
          * 医院确认就诊或在医院取消就诊
          */
         public function checkRegistration(){
@@ -276,6 +315,24 @@
                             ->setInc('amount');
                     }
                 }
+            }
+            $this->response($response,'json');
+        }
+
+        /**
+         * 跟新医院信息
+         */
+        public function updateHospitalProfile(){
+            $response['status'] = false;
+            $hid = I('get.hid');
+            // $hid = session('hospital_id');
+            $h = I('put.hospital');
+            $response['got'] = true;
+            if(!empty($hid) && !empty($h)){
+                $Hospital = M('Hospital');
+                $Hospital->where('id = %d',array($hid))->field($this->publicFields)->save($h);
+                $response['status'] = true;
+                $response['hospital'] = $h;
             }
             $this->response($response,'json');
         }

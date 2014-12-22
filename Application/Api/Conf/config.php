@@ -102,7 +102,7 @@ return array(
 
             /// 获取医院列表
             /// $_GET:
-            /// [city_id,page,limit] 如果有city_id则是按地区查找医院，skip和 limit 是分页用。
+            /// [city_id,page,limit,department] 如果有city_id则是按地区查找医院，skip和 limit 是分页用。
             /// return:
             /// 
             /// [{
@@ -133,7 +133,8 @@ return array(
             array('hospitals/session$','Hospital/login',array('method'=>'POST')),
 
             /// 根据id获取某个医院的信息
-            array('hospitals/:hid\d$','Hospital/getHospitalById',array('method'=>'GET')),
+            array('hospitals/:hid\d$','Hospital/getHospitalById','status = 1',array('method'=>'GET')),
+            array('hospitals/:hid\d$','Hospital/updateHospitalProfile',array('method'=>'PUT')),
             /// 获取某个医院的部门(科室)
             /// return:
             /// {
@@ -223,12 +224,22 @@ return array(
             /// }
             array('hospitals/:hid/sources$','Hospital/publishSources',array('method'=>'POST')),
 
+            /// 根据code获取预约信息
+            array('hospitals/:hid/registrations/:code$','Hospital/getRegistration','status = 1',array('method'=>'GET')),
+
             /// 医院确认就诊或在医院取消就诊
             /// $_PUT:
             /// {status: 'F'|'C' }
             /// return:
             /// {status: true | false}
-            array('hospitals/:hid/registrations/:rid$','Hospital/checkRegistration',array('method'=>'PUT'))
+            array('hospitals/:hid/registrations/:rid$','Hospital/checkRegistration',array('method'=>'PUT')),
+
+
+
+            ////////////////////////////////////////////////////////////
+            /// general query
+            ////////////////////////////////////////////////////////////
+            array('departments','Department/getList',array('method'=>'GET'))
 
 
 
@@ -237,25 +248,26 @@ return array(
         ),
 
 
-	// openshift 数据库配置
+        /*
+        // openshift 数据库配置
         'DB_TYPE'       => 'mysql',
         'DB_HOST'       => '127.3.145.130',
         'DB_NAME'       => 'registration',
         'DB_USER'       => 'admin4cpZdEn',
         'DB_PWD'        => '_Mz3HxyFtsyK',
         'DB_PORT'       => '3306',
+        */
 
 
-        /*
-        // 默认数据库配置,remote
+        // 默认数据库配置,本地
         'DB_TYPE'       => 'mysql',
         'DB_HOST'       => 'localhost',
         'DB_NAME'       => 'registration',
         'DB_USER'       => 'root',
         'DB_PWD'        => 'mmkkk',
         'DB_PORT'       => '3306',
-       
 
+        /*
         // 默认远程数据库配置
         'DB_TYPE'       => 'mysql',
         'DB_HOST'       => '104.131.165.132',

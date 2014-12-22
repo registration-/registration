@@ -124,7 +124,7 @@ CREATE TABLE registration(
 CREATE TABLE source(
     id int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     doctor_id int(10) NOT NULL,
-    date timestamp NOT NULL,
+    date Date NOT NULL,
     amount int(10),
     price float
 );

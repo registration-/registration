@@ -3,7 +3,7 @@ namespace Api\Controller;
 use Think\Controller\RestController;
 class UserController extends RestController {
 
-    protected $userFields = 'name,username,gender,province,city,verified_id,vid_type,credit,phone,email,insurance_card,registered_at,avatar';
+    protected $userFields = 'id,name,username,gender,province,city,verified_id,vid_type,credit,phone,email,insurance_card,registered_at,avatar';
 
     /**
      * 注册新用户
@@ -224,21 +224,23 @@ class UserController extends RestController {
             $Registration = M('Registration');
             $registration = $Registration->where('id = %d',array($rid))
                 ->limit(1)
-                ->select();
+                ->select()[0];
             //确保一天前才能取消
-            $daysBefore = round((strtotime($registration['date']) - time())/3600/24);
-            if($daysBefore >= 1){
-                $r['status'] = 'C';
-                $r['check_at'] = time();
-                $Registration->where('id = %d',array($rid))
-                    ->save($r);
+            if(!empty($registration)){
+                $daysBefore = round((strtotime($registration['date']) - time())/3600/24);
+                if($daysBefore >= 1){
+                    $r['status'] = 'C';
+                    $r['check_at'] = time();
+                    $Registration->where('id = %d',array($rid))
+                        ->save($r);
 
-                // 取消了预约，把原来号源数量加1
-                $Source = M('Source');
-                $Source->where('id = %d',array($registration['source_id']))
-                    ->setInc('amount');
+                    // 取消了预约，把原来号源数量加1
+                    $Source = M('Source');
+                    $Source->where('id = %d',array($registration['source_id']))
+                        ->setInc('amount');
 
-                $response['status'] = true;
+                    $response['status'] = true;
+                }
             }
         }
         $this->response($response,'json');
